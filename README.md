@@ -1,2 +1,8 @@
-# elixir-event-sourcing
-The source code for the event sourcing tutorial
+# The source code for the [event sourcing tutorial](https://blog.nootch.net/post/event-sourcing-with-elixir)
+
+To make this work you need to ...
+
+* read the [blog post](https://blog.nootch.net/post/event-sourcing-with-elixir)
+* install elixir, git, ...
+* clone this repo
+* run ...
