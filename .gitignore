@@ -1,0 +1,10 @@
+**/_build/
+**/cover/
+**/deps/
+**/doc/
+**/.fetch
+**/erl_crash.dump
+**/*.ez
+/bank_api/bank_api-*.tar
+/bank_api/priv/static/
+/bank_api/config/*.secret.exs
