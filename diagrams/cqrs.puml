@@ -1,0 +1,26 @@
+@startuml
+
+actor [user]
+node [user-interface]
+node [command-handler]
+node [domain-model]
+node [projectors]
+folder [read-models] {
+  database [read-model-1]
+  database [read-model-N]
+}
+node [query-handler]
+database [event-store]
+
+[user] --> [user-interface]
+[user-interface] --> [command-handler] : commands
+[command-handler] --> [domain-model]
+[domain-model] --> [event-store]
+[event-store] --> [domain-model] : events
+[event-store] --> [projectors]
+[projectors] --> [read-models]
+[user-interface] --> [query-handler] : queries
+[query-handler] --> [read-models]
+[query-handler] --> [user-interface] : results
+
+@enduml

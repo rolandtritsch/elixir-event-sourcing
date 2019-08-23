@@ -54,3 +54,17 @@ config :bank_api, BankAPI.Repo,
   database: "bank_api_dev",
   hostname: "localhost",
   pool_size: 10
+
+# Configure the eventstore
+config :eventstore,
+  column_data_type: "jsonb"
+
+config :eventstore, EventStore.Storage,
+  serializer: EventStore.JsonbSerializer,
+  types: EventStore.PostgresTypes,
+  username: "roland",
+  password: "roland",
+  database: "bank_api_eventstore_dev",
+  hostname: "localhost",
+  pool_size: 10,
+  pool_overflow: 5

@@ -16,3 +16,10 @@ config :bank_api, BankAPI.Repo,
   database: "bank_api_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Configure the eventstore
+config :commanded,
+  event_store_adapter: Commanded.EventStore.Adapters.InMemory
+
+config :commanded, Commanded.EventStore.Adapters.InMemory,
+  serializer: Commanded.Serialization.JsonSerializer
