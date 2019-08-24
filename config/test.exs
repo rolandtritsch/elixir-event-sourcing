@@ -11,10 +11,11 @@ config :logger, level: :warn
 
 # Configure your database
 config :bank_api, BankAPI.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "roland",
+  password: "roland",
   database: "bank_api_test",
   hostname: "localhost",
+  port: "5433",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # Configure the eventstore
