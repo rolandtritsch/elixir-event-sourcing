@@ -1,8 +1,7 @@
-defmodule NoOpMiddleware do
+defmodule BankAPI.NoOpMiddleware do
   @behaviour Commanded.Middleware
 
   alias Commanded.Middleware.Pipeline
-  import Pipeline
 
   def before_dispatch(%Pipeline{} = pipeline) do
     pipeline

@@ -1,4 +1,4 @@
-defmodule AccountsProjector do
+defmodule BankAPI.Projector.Accounts do
   #use Commanded.Projections.Ecto, name: "accounts_projector"
 
   #project %AnEvent{name: name}, _metadata, fn multi ->

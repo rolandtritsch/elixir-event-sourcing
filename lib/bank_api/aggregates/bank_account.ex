@@ -1,4 +1,9 @@
-defmodule BankAccount do
+defmodule BankAPI.Aggregate.BankAccount do
+  alias BankAPI.Aggregate.BankAccount
+
+  alias BankAPI.Command.OpenAccount
+  alias BankAPI.Event.BankAccountOpened
+
   defstruct [:account_number, :balance]
 
   # public command API

@@ -1,4 +1,4 @@
-defmodule Bank.Supervisor do
+defmodule BankAPI.Supervisor do
   use Supervisor
 
   def start_link do
@@ -8,7 +8,7 @@ defmodule Bank.Supervisor do
   def init(:ok) do
     Supervisor.init(
       [
-        AccountsProjector
+        BankAPI.Projector.Accounts
       ],
       strategy: :one_for_one
     )

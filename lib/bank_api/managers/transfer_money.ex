@@ -1,7 +1,16 @@
-defmodule TransferMoneyProcessManager do
+defmodule BankAPI.Manager.TransferMoney do
   use Commanded.ProcessManagers.ProcessManager,
-    name: "TransferMoneyProcessManager",
+    name: "TransferMoney",
     router: BankRouter
+
+  alias BankAPI.Manager.TransferMoney
+
+  alias BankAPI.Event.MoneyTransferRequested
+  alias BankAPI.Event.MoneyWithdrawn
+  alias BankAPI.Event.MoneyDeposited
+
+  alias BankAPI.Command.WithdrawMoney
+  alias BankAPI.Command.DepositMoney
 
   @derive Jason.Encoder
   defstruct [
@@ -27,7 +36,7 @@ defmodule TransferMoneyProcessManager do
 
   # Command dispatch
 
-  def handle(%TransferMoneyProcessManager{}, %MoneyTransferRequested{} = event) do
+  def handle(%TransferMoney{}, %MoneyTransferRequested{} = event) do
     %MoneyTransferRequested{
       transfer_uuid: transfer_uuid,
       debit_account: debit_account,
@@ -41,8 +50,8 @@ defmodule TransferMoneyProcessManager do
     }
   end
 
-  def handle(%TransferMoneyProcessManager{} = pm, %MoneyWithdrawn{}) do
-    %TransferMoneyProcessManager{
+  def handle(%TransferMoney{} = pm, %MoneyWithdrawn{}) do
+    %TransferMoney{
       transfer_uuid: transfer_uuid,
       credit_account: credit_account,
       amount: amount
@@ -58,7 +67,7 @@ defmodule TransferMoneyProcessManager do
   # State mutators
 
   def apply(
-    %TransferMoneyProcessManager{} = transfer,
+    %TransferMoney{} = transfer,
     %MoneyTransferRequested{} = event
   ) do
     %MoneyTransferRequested{
@@ -68,7 +77,7 @@ defmodule TransferMoneyProcessManager do
       amount: amount
     } = event
 
-    %TransferMoneyProcessManager{transfer |
+    %TransferMoney{transfer |
       transfer_uuid: transfer_uuid,
       debit_account: debit_account,
       credit_account: credit_account,
@@ -77,8 +86,8 @@ defmodule TransferMoneyProcessManager do
     }
   end
 
-  def apply(%TransferMoneyProcessManager{} = transfer, %MoneyWithdrawn{}) do
-    %TransferMoneyProcessManager{transfer |
+  def apply(%TransferMoney{} = transfer, %MoneyWithdrawn{}) do
+    %TransferMoney{transfer |
       status: :deposit_money_in_credit_account
     }
   end
