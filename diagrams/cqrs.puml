@@ -1,26 +1,22 @@
 @startuml
 
-actor [user]
-node [user-interface]
-node [command-handler]
-node [domain-model]
-node [projectors]
-folder [read-models] {
-  database [read-model-1]
-  database [read-model-N]
-}
-node [query-handler]
-database [event-store]
+actor User
+participant UIBFF
+queue CommandBus
+participant DomainModel
+queue EventBus
+participant Projectors
+database ReadModels
 
-[user] --> [user-interface]
-[user-interface] --> [command-handler] : commands
-[command-handler] --> [domain-model]
-[domain-model] --> [event-store]
-[event-store] --> [domain-model] : events
-[event-store] --> [projectors]
-[projectors] --> [read-models]
-[user-interface] --> [query-handler] : queries
-[query-handler] --> [read-models]
-[query-handler] --> [user-interface] : results
+User -> UIBFF : http commands
+UIBFF -> CommandBus : commands
+CommandBus -> DomainModel : commands
+DomainModel -> EventBus : events
+EventBus -> Projectors : events
+Projectors -> ReadModels : write
+User -> UIBFF : http queries
+UIBFF -> ReadModels : read
+ReadModels ->  UIBFF : results
+UIBFF -> User : results
 
 @enduml
