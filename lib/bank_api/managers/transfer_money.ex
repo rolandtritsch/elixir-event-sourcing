@@ -23,15 +23,15 @@ defmodule BankAPI.Manager.TransferMoney do
 
   # Process routing
 
-  def interested?(
-    %MoneyTransferRequested{transfer_uuid: transfer_uuid}
-  ), do: {:start, transfer_uuid}
-  def interested?(
-    %MoneyWithdrawn{transfer_uuid: transfer_uuid}
-  ), do: {:continue, transfer_uuid}
-  def interested?(
-    %MoneyDeposited{transfer_uuid: transfer_uuid}
-  ), do: {:stop, transfer_uuid}
+  def interested?(%MoneyTransferRequested{transfer_uuid: transfer_uuid}),
+    do: {:start, transfer_uuid}
+
+  def interested?(%MoneyWithdrawn{transfer_uuid: transfer_uuid}),
+    do: {:continue, transfer_uuid}
+
+  def interested?(%MoneyDeposited{transfer_uuid: transfer_uuid}),
+    do: {:stop, transfer_uuid}
+
   def interested?(_event), do: false
 
   # Command dispatch
@@ -67,9 +67,9 @@ defmodule BankAPI.Manager.TransferMoney do
   # State mutators
 
   def apply(
-    %TransferMoney{} = transfer,
-    %MoneyTransferRequested{} = event
-  ) do
+        %TransferMoney{} = transfer,
+        %MoneyTransferRequested{} = event
+      ) do
     %MoneyTransferRequested{
       transfer_uuid: transfer_uuid,
       debit_account: debit_account,
@@ -77,18 +77,17 @@ defmodule BankAPI.Manager.TransferMoney do
       amount: amount
     } = event
 
-    %TransferMoney{transfer |
-      transfer_uuid: transfer_uuid,
-      debit_account: debit_account,
-      credit_account: credit_account,
-      amount: amount,
-      status: :withdraw_money_from_debit_account
+    %TransferMoney{
+      transfer
+      | transfer_uuid: transfer_uuid,
+        debit_account: debit_account,
+        credit_account: credit_account,
+        amount: amount,
+        status: :withdraw_money_from_debit_account
     }
   end
 
   def apply(%TransferMoney{} = transfer, %MoneyWithdrawn{}) do
-    %TransferMoney{transfer |
-      status: :deposit_money_in_credit_account
-    }
+    %TransferMoney{transfer | status: :deposit_money_in_credit_account}
   end
 end

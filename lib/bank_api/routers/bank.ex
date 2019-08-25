@@ -4,5 +4,5 @@ defmodule BankAPI.Router.Bank do
   alias BankAPI.Command.OpenAccount
   alias BankAPI.Aggregate.BankAccount
 
-  dispatch OpenAccount, to: BankAccount, identity: :account_number
+  dispatch(OpenAccount, to: BankAccount, identity: :account_number)
 end
