@@ -2,21 +2,32 @@
 
 actor User
 participant UIBFF
-queue CommandBus
-participant DomainModel
-queue EventBus
+box DomainModel
+  queue CommandBus
+  participant Aggregate
+  participant ProcessManager
+  queue EventBus
+  participant QueryManager
+end box
 participant Projectors
 database ReadModels
 
 User -> UIBFF : http commands
 UIBFF -> CommandBus : commands
-CommandBus -> DomainModel : commands
-DomainModel -> EventBus : events
+CommandBus -> Aggregate : commands
+Aggregate -> EventBus : events
+EventBus -> ProcessManager : events
+ProcessManager -> CommandBus : commands
 EventBus -> Projectors : events
 Projectors -> ReadModels : write
+EventBus -> UIBFF : events
+UIBFF -> User : push
+
 User -> UIBFF : http queries
-UIBFF -> ReadModels : read
-ReadModels ->  UIBFF : results
+UIBFF -> QueryManager : queries
+QueryManager -> ReadModels : results
+ReadModels ->  QueryManager : results
+QueryManager -> UIBFF : results
 UIBFF -> User : results
 
 @enduml
