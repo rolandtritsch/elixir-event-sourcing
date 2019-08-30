@@ -24,14 +24,4 @@ defmodule BankAPIWeb.ChannelCase do
       @endpoint BankAPIWeb.Endpoint
     end
   end
-
-  setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(BankAPI.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(BankAPI.Repo, {:shared, self()})
-    end
-
-    :ok
-  end
 end

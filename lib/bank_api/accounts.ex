@@ -5,7 +5,6 @@ defmodule BankAPI.Accounts do
 
   import Ecto.Query, warn: false
 
-  alias Ecto.Changeset
   alias BankAPI.Repo
   alias BankAPI.Router
   alias BankAPI.Accounts.Commands.OpenAccount
@@ -13,44 +12,30 @@ defmodule BankAPI.Accounts do
 
   def get_account(uuid), do: Repo.get!(Account, uuid)
 
-  def open_account(account_params) do
-    changeset = account_opening_changeset(account_params)
+  def open_account(%{"initial_balance" => initial_balance}) do
+    account_uuid = UUID.uuid4()
 
-    if changeset.valid? do
-      account_uuid = UUID.uuid4()
+    dispatch_result =
+      %OpenAccount{
+        initial_balance: initial_balance,
+        account_uuid: account_uuid
+      }
+      |> Router.dispatch()
 
-      dispatch_result =
-        %OpenAccount{
-          initial_balance: changeset.changes.initial_balance,
-          account_uuid: account_uuid
-        }
-        |> Router.dispatch()
-
-      case dispatch_result do
-        :ok ->
-          {
-            :ok,
-            %Account{
-              uuid: account_uuid,
-              current_balance: changeset.changes.initial_balance
-            }
+    case dispatch_result do
+      :ok ->
+        {
+          :ok,
+          %Account{
+            uuid: account_uuid,
+            current_balance: initial_balance
           }
+        }
 
-        reply ->
-          reply
-      end
-    else
-      {:validation_error, changeset}
+      reply ->
+        reply
     end
   end
 
-  defp account_opening_changeset(params) do
-    {
-      params,
-      %{initial_balance: :integer}
-    }
-    |> Changeset.cast(params, [:initial_balance])
-    |> Changeset.validate_required([:initial_balance])
-    |> Changeset.validate_number(:initial_balance, greater_than: 0)
-  end
+  def open_account(_params), do: {:error, :bad_command}
 end
