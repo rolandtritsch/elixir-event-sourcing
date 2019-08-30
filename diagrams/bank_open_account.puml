@@ -1,0 +1,26 @@
+@startuml
+
+actor BankUser
+participant AccountController
+participant AccountModel
+queue CommandBus
+participant AccountAggregate
+queue EventBus
+participant AccountOpenedProjector
+database AccountsTable
+
+BankUser -> AccountController : create
+activate AccountController
+AccountController -> AccountModel : open_account
+activate AccountModel
+AccountModel ->o CommandBus : OpenAccountCommand
+AccountModel --> AccountController : Account
+deactivate AccountModel
+AccountController --> BankUser : Account
+deactivate AccountController
+CommandBus ->o AccountAggregate : OpenAccountCommand
+AccountAggregate ->o EventBus : AccountOpenedEvent
+EventBus ->o AccountOpenedProjector : AccountOpenedEvent
+AccountOpenedProjector -> AccountsTable : insert
+
+@enduml
