@@ -5,11 +5,11 @@ defmodule BankAPI.Accounts.Projectors.AccountOpened do
   alias BankAPI.Accounts.Events.AccountOpened
   alias BankAPI.Accounts.Projections.Account
 
-  project(%AccountOpened{} = evt, _metadata, fn multi ->
+  project(%AccountOpened{} = event, _metadata, fn multi ->
     Ecto.Multi.insert(multi, :account_opened, %Account{
-      uuid: evt.account_uuid,
-      current_balance: evt.initial_balance,
-      status: Account.status().open️
+      uuid: event.account_uuid,
+      current_balance: event.initial_balance,
+      status: "open"
     })
   end)
 end

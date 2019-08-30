@@ -49,20 +49,6 @@ defmodule BankAPI.Accounts.Aggregates.Account do
     {:error, :account_already_opened}
   end
 
-  def apply(
-        %Account{} = account,
-        %AccountOpened{
-          account_uuid: account_uuid,
-          initial_balance: initial_balance
-        }
-      ) do
-    %Account{
-      account
-      | uuid: account_uuid,
-        current_balance: initial_balance
-    }
-  end
-
   # ---
 
   def execute(
@@ -87,22 +73,6 @@ defmodule BankAPI.Accounts.Aggregates.Account do
         %DepositIntoAccount{}
       ) do
     {:error, :not_found}
-  end
-
-  def apply(
-        %Account{
-          uuid: account_uuid,
-          current_balance: _current_balance
-        } = account,
-        %DepositedIntoAccount{
-          account_uuid: account_uuid,
-          new_current_balance: new_current_balance
-        }
-      ) do
-    %Account{
-      account
-      | current_balance: new_current_balance
-    }
   end
 
   # ---
@@ -135,22 +105,6 @@ defmodule BankAPI.Accounts.Aggregates.Account do
     {:error, :not_found}
   end
 
-  def apply(
-        %Account{
-          uuid: account_uuid,
-          current_balance: _current_balance
-        } = account,
-        %WithdrawnFromAccount{
-          account_uuid: account_uuid,
-          new_current_balance: new_current_balance
-        }
-      ) do
-    %Account{
-      account
-      | current_balance: new_current_balance
-    }
-  end
-
   # ---
 
   def execute(
@@ -178,6 +132,54 @@ defmodule BankAPI.Accounts.Aggregates.Account do
         %CloseAccount{}
       ) do
     {:error, :not_found}
+  end
+
+# ---
+
+  def apply(
+        %Account{} = account,
+        %AccountOpened{
+          account_uuid: account_uuid,
+          initial_balance: initial_balance
+        }
+      ) do
+    %Account{
+      account
+      | uuid: account_uuid,
+        current_balance: initial_balance
+    }
+  end
+
+  def apply(
+        %Account{
+          uuid: account_uuid,
+          current_balance: _current_balance
+        } = account,
+        %DepositedIntoAccount{
+          account_uuid: account_uuid,
+          new_current_balance: new_current_balance
+        }
+      ) do
+    %Account{
+      account
+      | current_balance: new_current_balance
+    }
+  end
+
+  def apply(
+        %Account{
+          uuid: account_uuid,
+          current_balance: _current_balance
+        } = account,
+        %WithdrawnFromAccount{
+          account_uuid: account_uuid,
+          new_current_balance: new_current_balance
+        }
+      ) do
+    %Account{
+      account
+      | current_balance: new_current_balance
+    }
   end
 
   def apply(

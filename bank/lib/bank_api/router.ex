@@ -7,7 +7,7 @@ defmodule BankAPI.Router do
     OpenAccount,
     CloseAccount,
     DepositIntoAccount,
-    WithDrawFromAccount
+    WithdrawFromAccount
   }
 
   middleware(BankAPI.Middleware.ValidateCommand)
@@ -17,7 +17,7 @@ defmodule BankAPI.Router do
       OpenAccount,
       CloseAccount,
       DepositIntoAccount,
-      WithDrawFromAccount
+      WithdrawFromAccount
     ],
     to: Account,
     identity: :account_uuid
