@@ -9,6 +9,7 @@ To make this work you need to ...
 * run `mix deps.get`
 * run `MIX_ENV=test && mix ecto.setup`
 * run `MIX_ENV=dev && mix ecto.setup`
+* run `MIX_ENV=dev && mix event_store.create && mix event_store.init`
 * run the tests with `mix test`
 * run the phoenix server with `mix phx.server`
 * create an account by running `./scripts/open-account.sh`
