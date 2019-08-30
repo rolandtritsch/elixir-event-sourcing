@@ -1,9 +1,9 @@
-defmodule BankAPI.Accounts.Commands.OpenAccount do
+defmodule BankAPI.Accounts.Commands.DepositIntoAccount do
   @enforce_keys [:account_uuid]
 
   defstruct [
     :account_uuid,
-    :initial_balance
+    :deposit_amount
   ]
 
   alias BankAPI.Accounts
@@ -16,7 +16,7 @@ defmodule BankAPI.Accounts.Commands.OpenAccount do
   defp schema do
     %{
       account_uuid: [:string, Skooma.Validators.regex(Accounts.uuid_regex())],
-      initial_balance: [:int, &Validators.positive_integer(&1)]
+      deposit_amount: [:int, &Validators.positive_integer(&1, 1)]
     }
   end
 end
