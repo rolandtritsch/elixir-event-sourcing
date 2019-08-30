@@ -5,7 +5,6 @@ defmodule BankAPI.Accounts.Projectors.AccountOpenedTest do
   alias BankAPI.Accounts.Events.AccountOpened
   alias BankAPI.Accounts.Projectors.AccountOpened, as: Projector
 
-  @tag :skip
   test "should succeed with valid data" do
     uuid = UUID.uuid4()
 
