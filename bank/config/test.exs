@@ -11,8 +11,8 @@ config :logger, level: :warn
 
 # Configure your database
 config :bank_api, BankAPI.Repo,
-  username: "roland",
-  password: "roland",
+  username: "postgres",
+  password: "postgres",
   database: "bank_api_test",
   hostname: "localhost",
   port: "5433"
@@ -21,5 +21,4 @@ config :bank_api, BankAPI.Repo,
 config :commanded,
   event_store_adapter: Commanded.EventStore.Adapters.InMemory
 
-config :commanded, Commanded.EventStore.Adapters.InMemory,
-  serializer: Commanded.Serialization.JsonSerializer
+config :commanded, Commanded.EventStore.Adapters.InMemory, serializer: Commanded.Serialization.JsonSerializer

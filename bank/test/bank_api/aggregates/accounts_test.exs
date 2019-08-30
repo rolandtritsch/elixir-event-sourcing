@@ -25,8 +25,7 @@ defmodule BankAPI.Aggregates.AgentTest do
       account_uuid: UUID.uuid4()
     }
 
-    assert {:error, :initial_balance_must_be_above_zero} =
-             Aggregate.execute(%Aggregate{}, invalid_command)
+    assert {:error, :initial_balance_must_be_above_zero} = Aggregate.execute(%Aggregate{}, invalid_command)
   end
 
   test "errors out on already opened account" do
@@ -35,7 +34,6 @@ defmodule BankAPI.Aggregates.AgentTest do
       account_uuid: UUID.uuid4()
     }
 
-    assert {:error, :account_already_opened} =
-             Aggregate.execute(%Aggregate{uuid: UUID.uuid4()}, command)
+    assert {:error, :account_already_opened} = Aggregate.execute(%Aggregate{uuid: UUID.uuid4()}, command)
   end
 end
