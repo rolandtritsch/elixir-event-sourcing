@@ -17,8 +17,8 @@ defmodule BankAPI.Accounts do
 
     dispatch_result =
       %OpenAccount{
-        initial_balance: initial_balance,
-        account_uuid: account_uuid
+        account_uuid: account_uuid,
+        initial_balance: initial_balance
       }
       |> Router.dispatch()
 
