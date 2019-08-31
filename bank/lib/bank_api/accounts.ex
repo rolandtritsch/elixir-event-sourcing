@@ -22,7 +22,6 @@ defmodule BankAPI.Accounts do
 
   def open(initial_balance) do
     account_uuid = UUID.uuid4()
-    IO.inspect(account_uuid)
 
     dispatch_result =
       %OpenAccount{

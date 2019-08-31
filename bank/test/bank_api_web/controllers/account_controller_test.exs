@@ -5,7 +5,6 @@ defmodule BankAPIWeb.AccountControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  @tag :skip
   describe "create account" do
     test "renders account when data is valid", %{conn: conn} do
       conn =
@@ -21,6 +20,7 @@ defmodule BankAPIWeb.AccountControllerTest do
     end
   end
 
+  @tag :skip
   describe "deposit" do
     test "small amount", %{conn: conn} do
       conn =
@@ -31,8 +31,6 @@ defmodule BankAPIWeb.AccountControllerTest do
 
       %{"uuid" => id, "current_balance" => balance} = json_response(conn, 200)["data"]
       assert balance === 42
-
-      Process.sleep(1_000)
 
       conn =
         get(
