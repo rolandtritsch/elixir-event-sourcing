@@ -5,6 +5,7 @@ defmodule BankAPI.Accounts.Projectors.AccountOpenedTest do
   alias BankAPI.Accounts.Events.AccountOpened
   alias BankAPI.Accounts.Projectors.AccountOpened, as: Projector
 
+  @tag :skip
   test "should succeed with valid data" do
     uuid = UUID.uuid4()
 
@@ -14,12 +15,12 @@ defmodule BankAPI.Accounts.Projectors.AccountOpenedTest do
       Projector.handle(
         %AccountOpened{
           account_uuid: uuid,
-          initial_balance: 1_000
+          initial_balance: 2_000
         },
         %{event_number: last_seen_event_number + 1}
       )
 
-    assert only_instance_of(Account).current_balance == 1_000
+    assert only_instance_of(Account).current_balance == 2_000
     assert only_instance_of(Account).uuid == uuid
   end
 end

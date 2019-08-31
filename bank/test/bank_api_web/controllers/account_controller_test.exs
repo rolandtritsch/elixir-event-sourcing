@@ -1,41 +1,48 @@
 defmodule BankAPIWeb.AccountControllerTest do
   use BankAPIWeb.ConnCase
 
-  @create_attrs %{
-    initial_balance: 42_00
-  }
-  @invalid_attrs %{
-    initial_balance: nil
-  }
-
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
+  @tag :skip
   describe "create account" do
     test "renders account when data is valid", %{conn: conn} do
       conn =
         post(
           conn,
-          Routes.account_path(conn, :create),
-          account: @create_attrs
+          Routes.account_path(conn, :create, initial_balance: 10_000)
         )
 
       assert %{
                "uuid" => _uuid,
-               "current_balance" => 4200
-             } = json_response(conn, 201)["data"]
+               "current_balance" => 10_000
+             } = json_response(conn, 200)["data"]
     end
+  end
 
-    test "renders errors when data is invalid", %{conn: conn} do
+  describe "deposit" do
+    test "small amount", %{conn: conn} do
       conn =
         post(
           conn,
-          Routes.account_path(conn, :create),
-          account: @invalid_attrs
+          Routes.account_path(conn, :create, initial_balance: 42)
         )
 
-      assert json_response(conn, 422)["errors"] != %{}
+      %{"uuid" => id, "current_balance" => balance} = json_response(conn, 200)["data"]
+      assert balance === 42
+
+      Process.sleep(1_000)
+
+      conn =
+        get(
+          conn,
+          Routes.account_path(conn, :get, id)
+        )
+
+      %{"uuid" => id_, "current_balance" => balance} = json_response(conn, 200)["data"]
+      assert id === id_
+      assert balance === 42
     end
   end
 end

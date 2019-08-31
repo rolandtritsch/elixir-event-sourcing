@@ -7,8 +7,8 @@ defmodule BankAPI.Accounts.Projectors.AccountClosed do
   alias BankAPI.Accounts.Projections.Account
   alias Ecto.{Changeset, Multi}
 
-  project(%AccountClosed{} = evt, _metadata, fn multi ->
-    with {:ok, %Account{} = account} <- Accounts.get_account(evt.account_uuid) do
+  project(%AccountClosed{} = event, _metadata, fn multi ->
+    with {:ok, %Account{} = account} <- Accounts.get(event.account_uuid) do
       Multi.update(
         multi,
         :account,

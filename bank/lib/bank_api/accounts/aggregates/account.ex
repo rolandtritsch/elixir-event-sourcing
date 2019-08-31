@@ -81,7 +81,7 @@ defmodule BankAPI.Accounts.Aggregates.Account do
         %Account{uuid: account_uuid, closed?: false, current_balance: current_balance},
         %WithdrawFromAccount{account_uuid: account_uuid, withdraw_amount: amount}
       ) do
-    if current_balance - amount > 0 do
+    if current_balance - amount >= 0 do
       %WithdrawnFromAccount{
         account_uuid: account_uuid,
         new_current_balance: current_balance - amount

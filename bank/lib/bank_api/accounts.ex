@@ -20,15 +20,16 @@ defmodule BankAPI.Accounts do
     ~r/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
   end
 
-  def open_account(%{"initial_balance" => initial_balance}) do
+  def open(initial_balance) do
     account_uuid = UUID.uuid4()
+    IO.inspect(account_uuid)
 
     dispatch_result =
       %OpenAccount{
-        initial_balance: initial_balance,
-        account_uuid: account_uuid
+        account_uuid: account_uuid,
+        initial_balance: initial_balance
       }
-      |> Router.dispatch()
+      |> Router.dispatch(consistency: :strong)
 
     case dispatch_result do
       :ok ->
@@ -37,7 +38,7 @@ defmodule BankAPI.Accounts do
           %Account{
             uuid: account_uuid,
             current_balance: initial_balance,
-            status: Account.status().open
+            status: "open"
           }
         }
 
@@ -46,9 +47,7 @@ defmodule BankAPI.Accounts do
     end
   end
 
-  def open_account(_params), do: {:error, :bad_command}
-
-  def get_account(id) do
+  def get(id) do
     case Repo.get(Account, id) do
       %Account{} = account ->
         {:ok, account}
@@ -98,7 +97,7 @@ defmodule BankAPI.Accounts do
     end
   end
 
-  def close_account(id) do
+  def close(id) do
     %CloseAccount{
       account_uuid: id
     }

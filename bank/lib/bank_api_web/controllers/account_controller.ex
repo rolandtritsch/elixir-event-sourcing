@@ -6,26 +6,46 @@ defmodule BankAPIWeb.AccountController do
 
   action_fallback BankAPIWeb.FallbackController
 
-  def create(conn, %{"account" => account_params}) do
-    with {:ok, %Account{} = account} <- Accounts.open_account(account_params) do
-      conn
-      |> put_status(:created)
-      |> render("show.json", account: account)
-    end
-  end
-
-  def show(conn, %{"id" => account_id}) do
-    with {:ok, %Account{} = account} <- Accounts.get_account(account_id) do
+  def create(conn, %{"initial_balance" => balance}) do
+    with {b, ""} <- Integer.parse(balance),
+         {:ok, %Account{} = account} <- Accounts.open(b) do
       conn
       |> put_status(:ok)
       |> render("show.json", account: account)
     end
   end
 
-  def delete(conn, %{"id" => account_id}) do
-    with :ok <- Accounts.close_account(account_id) do
+  def get(conn, %{"id" => id}) do
+    with {:ok, %Account{} = account} <- Accounts.get(id) do
       conn
-      |> send_resp(200, "")
+      |> put_status(:ok)
+      |> render("show.json", account: account)
+    end
+  end
+
+  def deposit(conn, %{"id" => id, "amount" => amount}) do
+    with {a, ""} <- Integer.parse(amount),
+         {:ok, %Account{} = account} <- Accounts.deposit(id, a) do
+      conn
+      |> put_status(:ok)
+      |> render("show.json", account: account)
+    end
+  end
+
+  def withdraw(conn, %{"id" => id, "amount" => amount}) do
+    with {a, ""} <- Integer.parse(amount),
+         {:ok, %Account{} = account} <- Accounts.withdraw(id, a) do
+      conn
+      |> put_status(:ok)
+      |> render("show.json", account: account)
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    with :ok <- Accounts.close(id) do
+      conn
+      |> put_status(:ok)
+      |> json(%{data: %{id: id, deleted: :ok}})
     end
   end
 end

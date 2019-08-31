@@ -8,14 +8,14 @@ defmodule BankAPI.Accounts.Projectors.DepositsAndWithdrawals do
   alias BankAPI.Accounts.Projections.Account
   alias Ecto.{Changeset, Multi}
 
-  project(%DepositedIntoAccount{} = evt, _metadata, fn multi ->
-    with {:ok, %Account{} = account} <- Accounts.get_account(evt.account_uuid) do
+  project(%DepositedIntoAccount{} = event, _metadata, fn multi ->
+    with {:ok, %Account{} = account} <- Accounts.get(event.account_uuid) do
       Multi.update(
         multi,
         :account,
         Changeset.change(
           account,
-          current_balance: evt.new_current_balance
+          current_balance: event.new_current_balance
         )
       )
     else
@@ -24,14 +24,14 @@ defmodule BankAPI.Accounts.Projectors.DepositsAndWithdrawals do
     end
   end)
 
-  project(%WithdrawnFromAccount{} = evt, _metadata, fn multi ->
-    with {:ok, %Account{} = account} <- Accounts.get_account(evt.account_uuid) do
+  project(%WithdrawnFromAccount{} = event, _metadata, fn multi ->
+    with {:ok, %Account{} = account} <- Accounts.get(event.account_uuid) do
       Multi.update(
         multi,
         :account,
         Changeset.change(
           account,
-          current_balance: evt.new_current_balance
+          current_balance: event.new_current_balance
         )
       )
     else
