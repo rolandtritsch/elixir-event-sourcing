@@ -13,7 +13,8 @@ defmodule BankAPI.Accounts do
     OpenAccount,
     CloseAccount,
     DepositIntoAccount,
-    WithdrawFromAccount
+    WithdrawFromAccount,
+    TransferBetweenAccounts
   }
 
   def uuid_regex do
@@ -60,7 +61,7 @@ defmodule BankAPI.Accounts do
     dispatch_result =
       %DepositIntoAccount{
         account_uuid: id,
-        deposit_amount: amount
+        amount: amount
       }
       |> Router.dispatch(consistency: :strong)
 
@@ -80,7 +81,7 @@ defmodule BankAPI.Accounts do
     dispatch_result =
       %WithdrawFromAccount{
         account_uuid: id,
-        withdraw_amount: amount
+        amount: amount
       }
       |> Router.dispatch(consistency: :strong)
 
@@ -94,6 +95,16 @@ defmodule BankAPI.Accounts do
       reply ->
         reply
     end
+  end
+
+  def transfer(account_id, to_id, amount) do
+    %TransferBetweenAccounts{
+      account_uuid: account_id,
+      to_uuid: to_id,
+      amount: amount,
+      transfer_uuid: UUID.uuid4()
+    }
+    |> Router.dispatch(consistency: :strong)
   end
 
   def close(id) do

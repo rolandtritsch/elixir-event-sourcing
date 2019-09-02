@@ -1,9 +1,10 @@
-defmodule BankAPI.Accounts.Events.WithdrawnFromAccount do
+defmodule BankAPI.Accounts.Events.MoneyTransferRequested do
   @derive [Jason.Encoder]
 
   defstruct [
     :account_uuid,
-    :new_current_balance,
+    :to_uuid,
+    :amount,
     :transfer_uuid
   ]
 end

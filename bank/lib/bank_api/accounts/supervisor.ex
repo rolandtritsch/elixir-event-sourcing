@@ -1,3 +1,5 @@
+# lib/bank_api/accounts/supervisor.ex
+
 defmodule BankAPI.Accounts.Supervisor do
   use Supervisor
 
@@ -11,7 +13,8 @@ defmodule BankAPI.Accounts.Supervisor do
     children = [
       worker(Accounts.Projectors.AccountOpened, [], id: :account_opened),
       worker(Accounts.Projectors.AccountClosed, [], id: :account_closed),
-      worker(Accounts.Projectors.DepositsAndWithdrawals, [], id: :deposits_and_withdrawals)
+      worker(Accounts.Projectors.DepositsAndWithdrawals, [], id: :deposits_and_withdrawals),
+      worker(Accounts.Process.TransferMoney, [], id: :transfer_money)
     ]
 
     supervise(children, strategy: :one_for_one)

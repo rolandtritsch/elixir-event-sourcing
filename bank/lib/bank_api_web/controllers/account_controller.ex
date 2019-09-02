@@ -41,6 +41,15 @@ defmodule BankAPIWeb.AccountController do
     end
   end
 
+  def transfer(conn, %{"id" => id, "to_id" => to_id, "amount" => amount}) do
+    with {a, ""} <- Integer.parse(amount),
+         :ok <- Accounts.transfer(id, to_id, a) do
+      conn
+      |> put_status(:ok)
+      |> json(%{data: %{from: id, to: to_id, amount: a, transfered: :ok}})
+    end
+  end
+
   def delete(conn, %{"id" => id}) do
     with :ok <- Accounts.close(id) do
       conn

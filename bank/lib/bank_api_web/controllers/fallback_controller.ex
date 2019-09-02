@@ -48,11 +48,19 @@ defmodule BankAPIWeb.FallbackController do
     |> render(:"422")
   end
 
-  def call(conn, _) do
+  def call(conn, {:error, :transfer_to_same_account}) do
     conn
-    |> put_status(:no_match)
+    |> put_status(:unprocessable_entity)
     |> put_view(BankAPIWeb.ErrorView)
-    |> assign(:message, "Unknown error")
+    |> assign(:message, "Source and destination accounts are the same")
     |> render(:"422")
+  end
+
+  def call(conn, error) do
+    conn
+    |> put_status(:not_implemented)
+    |> put_view(BankAPIWeb.ErrorView)
+    |> assign(:message, error)
+    |> render(:"501")
   end
 end

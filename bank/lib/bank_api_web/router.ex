@@ -16,5 +16,7 @@ defmodule BankAPIWeb.Router do
     put "/accounts/:id/withdraw", AccountController, :withdraw
 
     put "/accounts/:id/delete", AccountController, :delete
+
+    put "/accounts/:id/transfer", AccountController, :transfer
   end
 end

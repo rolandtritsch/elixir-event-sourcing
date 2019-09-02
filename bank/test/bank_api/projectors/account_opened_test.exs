@@ -11,13 +11,13 @@ defmodule BankAPI.Accounts.Projectors.AccountOpenedTest do
     last_seen_event_number = get_last_seen_event_number("Accounts.Projectors.AccountOpened")
 
     assert :ok =
-      Projector.handle(
-        %AccountOpened{
-          account_uuid: uuid,
-          initial_balance: 2_000
-        },
-        %{event_number: last_seen_event_number + 1}
-      )
+             Projector.handle(
+               %AccountOpened{
+                 account_uuid: uuid,
+                 initial_balance: 2_000
+               },
+               %{event_number: last_seen_event_number + 1}
+             )
 
     assert only_instance_of(Account).current_balance == 2_000
     assert only_instance_of(Account).uuid == uuid
