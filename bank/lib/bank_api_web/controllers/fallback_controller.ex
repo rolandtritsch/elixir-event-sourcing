@@ -40,6 +40,14 @@ defmodule BankAPIWeb.FallbackController do
     |> render(:"422")
   end
 
+  def call(conn, {:error, :balance_not_zero}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(BankAPIWeb.ErrorView)
+    |> assign(:message, "Cannot delete account. Balance not zero")
+    |> render(:"422")
+  end
+
   def call(conn, {:error, :command_validation_failure, _command, _errors}) do
     conn
     |> put_status(:unprocessable_entity)

@@ -140,14 +140,23 @@ defmodule BankAPI.Accounts.Aggregates.Account do
   # ---
 
   def execute(
-        %Account{account_uuid: account_uuid, closed?: false},
+        %Account{account_uuid: account_uuid, current_balance: current_balance, closed?: false},
         %CloseAccount{
           account_uuid: account_uuid
         }
-      ) do
+      ) when current_balance == 0 do
     %AccountClosed{
       account_uuid: account_uuid
     }
+  end
+
+  def execute(
+        %Account{account_uuid: account_uuid, current_balance: current_balance, closed?: false},
+        %CloseAccount{
+          account_uuid: account_uuid
+        }
+      ) when current_balance > 0 do
+    {:error, :balance_not_zero}
   end
 
   def execute(
