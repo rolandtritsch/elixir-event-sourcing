@@ -1,9 +1,7 @@
 defmodule BankAPI.Accounts.Aggregates.Account do
-  defstruct [
-    account_uuid: nil,
-    current_balance: nil,
-    closed?: false
-  ]
+  defstruct account_uuid: nil,
+            current_balance: nil,
+            closed?: false
 
   alias __MODULE__
 
@@ -56,12 +54,21 @@ defmodule BankAPI.Accounts.Aggregates.Account do
   # ---
 
   def execute(
-        %Account{account_uuid: account_uuid, closed?: false, current_balance: current_balance},
-        %DepositIntoAccount{account_uuid: account_uuid, amount: amount}
+        %Account{
+          account_uuid: account_uuid,
+          closed?: false,
+          current_balance: current_balance
+        },
+        %DepositIntoAccount{
+          account_uuid: account_uuid,
+          amount: amount,
+          transfer_uuid: transfer_uuid
+        }
       ) do
     %DepositedIntoAccount{
       account_uuid: account_uuid,
-      new_current_balance: current_balance + amount
+      new_current_balance: current_balance + amount,
+      transfer_uuid: transfer_uuid
     }
   end
 
@@ -82,17 +89,38 @@ defmodule BankAPI.Accounts.Aggregates.Account do
   # ---
 
   def execute(
-        %Account{account_uuid: account_uuid, closed?: false, current_balance: current_balance},
-        %WithdrawFromAccount{account_uuid: account_uuid, amount: amount}
-      ) do
-    if current_balance - amount >= 0 do
-      %WithdrawnFromAccount{
-        account_uuid: account_uuid,
-        new_current_balance: current_balance - amount
-      }
-    else
-      {:error, :insufficient_funds}
-    end
+        %Account{
+          account_uuid: account_uuid,
+          closed?: false,
+          current_balance: current_balance
+        },
+        %WithdrawFromAccount{
+          account_uuid: account_uuid,
+          amount: amount,
+          transfer_uuid: transfer_uuid
+        }
+      )
+      when current_balance - amount >= 0 do
+    %WithdrawnFromAccount{
+      account_uuid: account_uuid,
+      new_current_balance: current_balance - amount,
+      transfer_uuid: transfer_uuid
+    }
+  end
+
+  def execute(
+        %Account{
+          account_uuid: account_uuid,
+          closed?: false,
+          current_balance: current_balance
+        },
+        %WithdrawFromAccount{
+          account_uuid: account_uuid,
+          amount: amount
+        }
+      )
+      when current_balance - amount < 0 do
+    {:error, :insufficient_funds}
   end
 
   def execute(

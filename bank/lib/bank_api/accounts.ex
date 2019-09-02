@@ -29,7 +29,7 @@ defmodule BankAPI.Accounts do
         account_uuid: account_uuid,
         initial_balance: initial_balance
       }
-      |> Router.dispatch(consistency: :strong)
+      |> Router.dispatch()
 
     case dispatch_result do
       :ok ->
@@ -63,7 +63,7 @@ defmodule BankAPI.Accounts do
         account_uuid: id,
         amount: amount
       }
-      |> Router.dispatch(consistency: :strong)
+      |> Router.dispatch()
 
     case dispatch_result do
       :ok ->
@@ -83,7 +83,7 @@ defmodule BankAPI.Accounts do
         account_uuid: id,
         amount: amount
       }
-      |> Router.dispatch(consistency: :strong)
+      |> Router.dispatch()
 
     case dispatch_result do
       :ok ->
@@ -104,7 +104,7 @@ defmodule BankAPI.Accounts do
       amount: amount,
       transfer_uuid: UUID.uuid4()
     }
-    |> Router.dispatch(consistency: :strong)
+    |> Router.dispatch()
   end
 
   def close(id) do

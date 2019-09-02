@@ -64,12 +64,15 @@ defmodule BankAPI.Accounts.Process.TransferMoney do
 
   def handle(
         %TransferMoney{
-          account_uuid: _account_uuid,
+          account_uuid: account_uuid,
           to_uuid: to_uuid,
           amount: amount,
           transfer_uuid: transfer_uuid
         },
-        %WithdrawnFromAccount{}
+        %WithdrawnFromAccount{
+          account_uuid: account_uuid,
+          transfer_uuid: transfer_uuid
+        }
       ) do
     %DepositIntoAccount{
       account_uuid: to_uuid,

@@ -1,7 +1,6 @@
 defmodule BankAPI.Accounts.Projectors.DepositsAndWithdrawals do
   use Commanded.Projections.Ecto,
-    name: "Accounts.Projectors.DepositsAndWithdrawals",
-    consistency: :strong
+    name: "Accounts.Projectors.DepositsAndWithdrawals"
 
   alias BankAPI.Accounts
   alias BankAPI.Accounts.Events.{DepositedIntoAccount, WithdrawnFromAccount}
@@ -9,6 +8,8 @@ defmodule BankAPI.Accounts.Projectors.DepositsAndWithdrawals do
   alias Ecto.{Changeset, Multi}
 
   project(%DepositedIntoAccount{} = event, _metadata, fn multi ->
+    IO.inspect(event)
+
     with {:ok, %Account{} = account} <- Accounts.get(event.account_uuid) do
       Multi.update(
         multi,
@@ -25,6 +26,8 @@ defmodule BankAPI.Accounts.Projectors.DepositsAndWithdrawals do
   end)
 
   project(%WithdrawnFromAccount{} = event, _metadata, fn multi ->
+    IO.inspect(event)
+
     with {:ok, %Account{} = account} <- Accounts.get(event.account_uuid) do
       Multi.update(
         multi,
