@@ -13,15 +13,16 @@ defmodule BankAPI.Router do
 
   middleware(BankAPI.Middleware.ValidateCommand)
 
-  dispatch(
-    [
-      OpenAccount,
-      CloseAccount,
+  dispatch [OpenAccount,CloseAccount],
+    to: Account,
+    identity: :account_uuid,
+    lifespan: Account.Lifespan
+
+  dispatch [
       DepositIntoAccount,
       WithdrawFromAccount,
       TransferBetweenAccounts
     ],
     to: Account,
     identity: :account_uuid
-  )
 end
