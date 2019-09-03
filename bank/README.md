@@ -4,7 +4,7 @@
 
 To make this work you need to ...
 
-* install and start postgres (and create/configure the postgres user (with a password `postgres`))
+* install and start postgres (and create/configure the `postgres` user (with a `postgres` password))
   * Note: My postgres server runs on port 5433 (if yours runs on 5432, you need to change `config/dev.exs` and `config/test.exs`)
 * run `mix deps.get`
 * run `MIX_ENV=test && mix ecto.setup`
@@ -12,14 +12,21 @@ To make this work you need to ...
 * run `MIX_ENV=dev && mix event_store.create && mix event_store.init`
 * run the tests with `mix test`
 * run the phoenix server with `mix phx.server`
-* create an account by running `./scripts/open-account.sh`
+* test a full lifecycle by running `./scripts/full.sh`
+* test a transfer by running `./scripts/transfer.sh`
 
 ## Diagrams
+
+Note: The diagrams below show how the system behaves with `strong` consistency being the default (see `config/config.exs`)
 
 ### CQRS (in general)
 
 ![CQRS](./images/cqrs.png)
 
-### Open Account
+### Full Lifecycle
 
-![Open Account](./images/bank-open-account.png)
+![Full](./images/full.png)
+
+### Transfer
+
+![Transfer](./images/transfer.png)

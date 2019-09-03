@@ -1,0 +1,37 @@
+@startuml
+
+actor BankUser
+participant AccountController
+participant AccountModel
+queue CommandBus
+participant AccountAggregate
+queue EventBus
+participant TransferProcess
+participant AccountProjector
+database AccountsTable
+
+BankUser -> AccountController : transfer
+activate AccountController
+AccountController -> AccountModel : transfer
+activate AccountModel
+AccountModel ->o CommandBus : TransferBetweenAccountsCommand
+CommandBus ->o AccountAggregate : TransferBetweenAccountsCommand
+AccountAggregate ->o EventBus : MoneyTransferRequestedEvent
+EventBus ->o TransferProcess : MoneyTransferRequestedEvent
+TransferProcess ->o CommandBus : WithdrawFromAccount
+CommandBus ->o AccountAggregate : WithdrawFromAccountCommand
+AccountAggregate ->o EventBus : WithdrawnFromAccountEvent
+EventBus ->o AccountProjector : WithdrawnFromAccountEvent
+AccountProjector -> AccountsTable : update
+EventBus ->o TransferProcess : WithdrawnFromAccountEvent
+TransferProcess ->o CommandBus : DepositIntoAccountCommand
+CommandBus ->o AccountAggregate : DepositIntoAccountCommand
+AccountAggregate ->o EventBus : DepositedFromAccountEvent
+EventBus ->o AccountProjector : DepositedFromAccountEvent
+AccountProjector -> AccountsTable : update
+AccountModel --> AccountController : ok
+deactivate AccountModel
+AccountController --> BankUser : ok
+deactivate AccountController
+
+@enduml

@@ -1,0 +1,80 @@
+@startuml
+
+actor BankUser
+participant AccountController
+participant AccountModel
+queue CommandBus
+participant AccountAggregate
+queue EventBus
+participant AccountProjector
+database AccountsTable
+
+BankUser -> AccountController : create
+activate AccountController
+AccountController -> AccountModel : open
+activate AccountModel
+AccountModel ->o CommandBus : OpenAccountCommand
+CommandBus ->o AccountAggregate : OpenAccountCommand
+AccountAggregate ->o EventBus : AccountOpenedEvent
+EventBus ->o AccountProjector : AccountOpenedEvent
+AccountProjector -> AccountsTable : insert
+AccountModel --> AccountController : Account
+deactivate AccountModel
+AccountController --> BankUser : Account
+deactivate AccountController
+
+BankUser -> AccountController : get
+activate AccountController
+AccountController -> AccountModel : get
+activate AccountModel
+AccountModel -> AccountsTable : read
+AccountModel --> AccountController : Account
+deactivate AccountModel
+AccountController --> BankUser : Account
+deactivate AccountController
+
+BankUser -> AccountController : deposit
+activate AccountController
+AccountController -> AccountModel : deposit
+activate AccountModel
+AccountModel ->o CommandBus : DepositIntoAccountCommand
+CommandBus ->o AccountAggregate : DepositIntoAccountCommand
+AccountAggregate ->o EventBus : DepositedIntoAccountEvent
+EventBus ->o AccountProjector : DepositedIntoAccountEvent
+AccountProjector -> AccountsTable : update
+AccountModel -> AccountsTable : read
+AccountModel --> AccountController : Account
+deactivate AccountModel
+AccountController --> BankUser : Account
+deactivate AccountController
+
+BankUser -> AccountController : withdraw
+activate AccountController
+AccountController -> AccountModel : withdraw
+activate AccountModel
+AccountModel ->o CommandBus : WithdrawFromAccountCommand
+CommandBus ->o AccountAggregate : WithdrawFromAccountCommand
+AccountAggregate ->o EventBus : WithdrawnFromAccountEvent
+EventBus ->o AccountProjector : WithdrawnFromAccountEvent
+AccountProjector -> AccountsTable : update
+AccountModel -> AccountsTable : read
+AccountModel --> AccountController : Account
+deactivate AccountModel
+AccountController --> BankUser : Account
+deactivate AccountController
+
+BankUser -> AccountController : delete
+activate AccountController
+AccountController -> AccountModel : close
+activate AccountModel
+AccountModel ->o CommandBus : CloseAccountCommand
+CommandBus ->o AccountAggregate : CloseAccountCommand
+AccountAggregate ->o EventBus : AccountClosedEvent
+EventBus ->o AccountProjector : AccountClosedEvent
+AccountProjector -> AccountsTable : delete
+AccountModel --> AccountController : ok
+deactivate AccountModel
+AccountController --> BankUser : ok
+deactivate AccountController
+
+@enduml
