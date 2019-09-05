@@ -5,7 +5,6 @@
 To make this work you need to ...
 
 * install and start postgres (and create/configure the `postgres` user (with a `postgres` password))
-  * Note: My postgres server runs on port 5433 (if yours runs on 5432, you need to change `config/dev.exs` and `config/test.exs`)
 * run `mix deps.get`
 * run `MIX_ENV=test && mix ecto.setup`
 * run `MIX_ENV=dev && mix ecto.setup`

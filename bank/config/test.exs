@@ -14,8 +14,7 @@ config :bank_api, BankAPI.Repo,
   username: "postgres",
   password: "postgres",
   database: "bank_api_test",
-  hostname: "localhost",
-  port: "5433"
+  hostname: "localhost"
 
 # Configure the eventstore
 config :commanded,

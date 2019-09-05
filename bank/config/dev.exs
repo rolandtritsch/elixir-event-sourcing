@@ -53,7 +53,6 @@ config :bank_api, BankAPI.Repo,
   password: "postgres",
   database: "bank_api_dev",
   hostname: "localhost",
-  port: "5433",
   pool_size: 10
 
 # Configure the eventstore
@@ -67,6 +66,5 @@ config :eventstore, EventStore.Storage,
   password: "postgres",
   database: "bank_api_eventstore_dev",
   hostname: "localhost",
-  port: "5433",
   pool_size: 10,
   pool_overflow: 5
