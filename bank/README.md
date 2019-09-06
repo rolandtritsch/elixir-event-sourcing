@@ -1,4 +1,4 @@
-# The bank example
+# The [bank](https://blog.nootch.net/post/event-sourcing-with-elixir/) example
 
 ## Getting started
 
