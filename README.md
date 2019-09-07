@@ -1,4 +1,4 @@
 # Implement (some) [Commanded](https://github.com/commanded/commanded) event sourcing examples
 
-* The [bank](https://blog.nootch.net/post/event-sourcing-with-elixir) example
-* The [challenge](https://github.com/slashdotdash/segment-challenge) example
+* The [bank](https://github.com/rolandtritsch/elixir-event-sourcing/tree/master/bank) example
+* The [challenge]() example
